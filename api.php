@@ -1,36 +1,29 @@
 <?php 
-//sku precio cantidad id_producto
 
 
 $codigo_autorizacion = $_GET['code'];
-//TG-62e2c787eff14400124ff63b-791802117
-//$codigo_autorizacion = "TG-62e2c787eff14400124ff63b-791802117";
 
+//Codigos sku para convertirlos a codigos de mercado libre (MLN)
+$arreglo = array();
 
-$arreglo = array(9786078473120, 9786074531046, 9786071430632, 9788416972173, 9788446046981, 9789688607114, 9788496669765, 9788496669796, 9786078683017, 9786077723585);
-
-if (true){
-    
-    
-    
     //Comprobamos que se  recibio el codigo en el parametro code
     if (isset($codigo_autorizacion)) {
 
      /**
      * Url para obtener autorización
-     --https://auth.mercadolibre.com.mx/authorization?response_type=code&client_id=181537600478799&redirect_uri=https://libreriashidalgo.com/mercadolibre/api.php
+     -- https://developers.mercadolibre.com.ar/es_ar/autenticacion-y-autorizacion
      */
      
     
-    // abrimos la sesión cURL
+    // abrimos la sesion cURL
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL,"https://api.mercadolibre.com/oauth/token");
     
     // indicamos el tipo de petición: POST
     curl_setopt($ch, CURLOPT_POST, TRUE);
     
-    // definimos cada uno de los parámetros
-    curl_setopt($ch, CURLOPT_POSTFIELDS, "grant_type=authorization_code&client_id=181537600478799&client_secret=QEos6WWaUsyHMqu5ZI9nq5NEZP28ifge&code=".$codigo_autorizacion."&redirect_uri=https://libreriashidalgo.com/mercadolibre/api.php");
+    // definimos cada uno de los parametros
+    curl_setopt($ch, CURLOPT_POSTFIELDS, "grant_type=authorization_code&client_id=APP_ID&client_secret=CLAVE_SECRETA&code=".$codigo_autorizacion."&redirect_uri=REDIRECT_URI");
     
     // recibimos la respuesta y la guardamos en una variable
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -57,7 +50,7 @@ if (true){
                     //Iniciamos la nueva sesion para usar el token dado y mandar peticion por medio de la api
                 $ch = curl_init();
                 
-                curl_setopt($ch, CURLOPT_URL, 'https://api.mercadolibre.com/users/791802117/items/search?seller_sku='.$arr);
+                curl_setopt($ch, CURLOPT_URL, 'https://api.mercadolibre.com/users/$ID_USUARIO/items/search?seller_sku='.$arr);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
                 
@@ -138,34 +131,6 @@ if (true){
 
 
 </script>
-
-
-
-
-<!-- 
-<table>
-  <thead align="left" style="display: table-header-group">
-  <tr>
-     <th>Sku </th>
-     <th>Precio</th>
-     <th>Cantidad </th>
-     <th>Id_Producto </th>
-  </tr>
-  </thead>
-<tbody>
-<?php 
-foreach ($codigos_mercado_libree as $codigos_mercado_libr) :?>
-  <tr class="item_row">
-        <td><?php echo 'MLM'.$codigos_mercado_libr; ?></td>
-        <td> <?php echo 'null'; ?></td>
-        <td> <?php echo 'null';?></td>
-        <td> <?php echo 'null'; ?></td>
-  </tr>
-<?php endforeach;?>
-</tbody>
-</table>
-
--->
 
 <?php 
 print_r($codigos_mercado_libree);
